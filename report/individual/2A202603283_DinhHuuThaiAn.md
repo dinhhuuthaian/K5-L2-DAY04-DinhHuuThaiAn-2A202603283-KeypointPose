@@ -64,11 +64,11 @@ Mã lỗi dùng đúng một trong: `lr_swap`, `vis_flag`, `position`, `missing`
 
 | Ảnh | Người / mặt | Điểm | Mã lỗi | Ghi chú | Đã sửa? |
 |---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
+| 000000012552.jpg | person | right_knee | missing | bị che bởi người đằng sau và người đó đang ngồi sổm | Có, đổi sang occluded |
+| 000000393909.jpg | person | left_elbow | missing | bị chú chó che mất nên k xác định được vị trí | Có, đổi sang occluded |
+| face_255797.jpg | face | left_eye, right_eye | vis_flag | Mắt bị kính râm che khuất, không thể xác định chính xác vị trí các điểm landmark mắt. | Giữ nguyên, đánh dấu vùng mắt bị che khuất |
+| face_185015.jpg | face | ok | ok | Các điểm landmark mắt, mũi và miệng được xác định tương đối chính xác, không bị che khuất | Không cần sửa |
+| face_145751.jpg | face | ok | ok | Các điểm landmark mắt, mũi và miệng được xác định tương đối chính xác, không bị che khuất | Không cần sửa |
 | | | | | | |
 | | | | | | |
 | | | | | | |
@@ -77,9 +77,9 @@ Tổng hợp số lỗi theo mã:
 
 | `lr_swap` | `vis_flag` | `position` | `missing` | `extra` | `ok` |
 |---:|---:|---:|---:|---:|---:|
-| | | | | | |
+| 0 | 1 | 0 | 2 | 0 | 0 |
 
-Điểm còn phân vân giữa `v = 1` và `v = 0` (ghi cả hai lựa chọn và lý do chọn):
+Điểm còn phân vân giữa `v = 1` và `v = 0` (ghi cả hai lựa chọn và lý do chọn): có nhiều điểm bị che khuất khá nặng nhưng mà em nghĩ là vẫn có thể xác định được vị trí thì em vẫn để v = 1
 
 ...
 
@@ -89,22 +89,36 @@ Tự kiểm tay trong file JSON:
 
 | File | Người / mặt kiểm (ảnh, thứ tự) | Số phần tử `keypoints` | Điểm `outside` ra `v = 0`, `occluded` ra `v = 1`? | `num_keypoints` khớp? |
 |---|---|---:|---|---|
-| `HoVaTen_persons.zip` | | | | |
-| `HoVaTen_persons.zip` | | | | |
-| `HoVaTen_faces.zip` | | | | |
+| `dinhhuuthaian_persons.zip` | Person (000000308257.jpg) | 16 | có | có |
+| `dinhhuuthaian_persons.zip` | person(000000314154.jpg) | 15 | có | có |
+| `dinhhuuthaian_faces.zip` | face(face_92028.jpg) | 13 | | có |
 
 Sau khi xuất, CVAT ghi `occluded` thành `v = ___` và `outside` thành `v = ___`. Tọa độ của điểm `outside` trong file là `0, 0` hay tọa độ cũ? ___
 
-Hai job đã chuyển sang completed trên CVAT? Có / Không
+Hai job đã chuyển sang completed trên CVAT? Có 
 
 Dán phần **TÓM TẮT** in ra từ `src/check_submission.py`:
 
 ```text
-(dán ở đây)
+- File person: DinhHuuThaiAn_persons.zip
+  Số ảnh: 12 · số skeleton `person`: 19 · mỗi annotation 51 số
+  Skeleton theo ảnh: 000000012552=3, 000000150192=2, 000000183176=1, 000000210604=2, 000000297227=2, 000000308257=1, 000000314154=1, 000000365099=1, 000000390585=1, 000000393909=2, 000000445187=1, 000000467300=2
+  Cờ v: v=2 214 (66%) · v=1 34 (11%) · v=0 75 (23%)
+  num_keypoints trung bình: 13.1
+- File face: DinhHuuThaiAn_faces.zip
+  Số ảnh: 8 · số skeleton `face`: 8 · mỗi annotation 39 số
+  Skeleton theo ảnh: face_125051=1, face_145751=1, face_185015=1, face_255797=1, face_264124=1, face_38721=1, face_504911=1, face_92028=1
+  Cờ v: v=2 104 (100%) · v=1 0 (0%) · v=0 0 (0%)
+  num_keypoints trung bình: 13.0
+- Ghi chú: 23 điểm v = 0 vẫn mang tọa độ cũ (CVAT 2.x xuất như vậy; chuẩn COCO ghi 0, 0). Không phải lỗi: điểm v = 0 bị bỏ qua khi huấn luyện và khi chấm.
+- Số [LỖI]: 0 · số [CẢNH BÁO]: 3
+Kết quả: ĐẠT (đọc lại từng cảnh báo ở trên)
 ```
 
 Các `[CẢNH BÁO]` còn giữ nguyên và lý do:
-
+   [CẢNH BÁO] 000000012552.jpg #1: cặp knee, ankle nằm ngược phía so với các cặp còn lại. Có thể đổi trái/phải một cặp (`lr_swap`), hoặc tay / chân bắt chéo thật: kiểm lại.
+  [CẢNH BÁO] 000000150192.jpg #1: các điểm chỉ trải cao 43 px (< 60 px). Người dưới 60 px không gán; nếu người cao hơn nhưng bị cắt khung thì bỏ qua cảnh báo này.
+  [CẢNH BÁO] 000000308257.jpg #1: cặp ankle nằm ngược phía so với các cặp còn lại. Có thể đổi trái/phải một cặp (`lr_swap`), hoặc tay / chân bắt chéo thật: kiểm lại.
 ...
 
 ## 6. Ảnh chụp màn hình
@@ -131,19 +145,21 @@ Nguồn ảnh: COCO val2017 / Wikimedia Commons.
 
 1. Lỗi bạn mắc nhiều nhất hôm nay, và cách bạn sẽ tránh ở dự án thật:
 
-   ...
+   Lỗi nhiều nhất là gán trái/phải không nhất quán ở người quay lưng, Ở dự án thật, em sẽ chốt quy tắc trước khi gán ("trái/phải theo cơ thể người trong ảnh, không theo người xem"), gán xong một ảnh quay lưng thì kiểm lại cặp vai, hông, cổ chân trước khi sang ảnh khác, và chạy script kiểm tra sau mỗi lượt xuất
 
 2. Một quy tắc bạn đề xuất thêm vào guideline (kèm ảnh ví dụ nếu có):
 
-   ...
+  Với người quay lưng hoặc nghiêng, luôn gán trái/phải theo cơ thể người trong ảnh, và đặt điểm đầu tiên ở vai trái của người đó để làm mốc đối chiếu cho các điểm còn lại
 
 3. Nhãn của bạn đi vào model ở đâu? Chọn một lỗi bạn đã sửa và nói nó sẽ làm model học sai thế nào (heatmap, trọng số trong loss, hay bước lật ảnh):
 
-   ...
+   Lấy lỗi đảo trái/phải ở cặp ankle. Nếu nhãn bị đảo, model sẽ học sai ở bước lật ảnh: khi lật ngang ảnh để augment, hệ thống hoán đổi cặp trái/phải theo danh sách `flip_pairs`, nên một điểm gán sai bên sẽ bị hoán đổi thành sai thêm một lần nữa và model nhận hai tín hiệu mâu thuẫn cho cùng một khớp
 
 ## 8. Khó khăn và lỗi kỹ thuật
 
-...
+- **Đăng nhập CVAT thất bại hai lần Script nhập mật khẩu ẩn nên không thấy mình gõ gì
+- **File zip xuất không mở được trong VS Code** (báo là file nhị phân).
+- **Tọa độ của điểm `v = 0` không nhất quán trong file xuất:** một số điểm giữ tọa độ cũ
 
 ## Bonus (nếu làm)
 
