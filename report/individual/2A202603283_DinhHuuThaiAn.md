@@ -6,26 +6,26 @@ Dữ liệu: 12 ảnh người COCO val2017 (Lin et al., 2014) và 8 ảnh chân
 
 ## 0. Thông tin học viên
 
-- Họ tên:
-- MSSV:
-- Email:
-- Link repository:
-- Phiên bản CVAT (Help → About):
-- Máy: hệ điều hành ___ · RAM ___ GB · chạy CVAT chế độ đầy đủ / lite
-- Bộ ảnh (`src/exports/assignment.json` do `lab.py setup` tạo): có / không
-- Giờ bắt đầu:
-- Giờ kết thúc:
+- Họ tên: Đinh Hữu Thái An
+- MSSV: 2A202603283
+- Email: dinhhuuthaian9191@gmail.com
+- Link repository: https://github.com/dinhhuuthaian/K5-L2-DAY04-DinhHuuThaiAn-2A202603283-KeypointPose
+- Phiên bản CVAT (Help → About): 2.74.1
+- Máy: hệ điều hành _Windows 10 (bản 10.0.19045)__ · RAM _16__ GB · chạy CVAT chế độ đầy đủ / lite
+- Bộ ảnh (`src/exports/assignment.json` do `lab.py setup` tạo): có 
+- Giờ bắt đầu: 16h30
+- Giờ kết thúc: 19h
 
 ## 1. Kiểm tra label (CP0)
 
 | Label | Kiểu | Số điểm | Tên điểm đúng bảng của lab? | Đúng thứ tự? | Số cạnh |
 |---|---|---:|---|---|---:|
-| `person` | | | | | |
-| `face` | | | | | |
+| `person` | Skeleton  | 17 | có | có | 19 |
+| `face` | Skeleton | 13 | có | có | 13 |
 
-Mẫu `person` dựng theo người quay mặt về camera (các điểm `left_*` nằm bên phải khung mẫu)? Có / Không
+Mẫu `person` dựng theo người quay mặt về camera (các điểm `left_*` nằm bên phải khung mẫu)? Có 
 
-Cách đổi cờ `occluded` / `outside` cho **một điểm** trên phiên bản CVAT này (một câu):
+Cách đổi cờ `occluded` / `outside` cho **một điểm** trên phiên bản CVAT này (một câu): Nếu mà không thấy điểm đó và không xác định được vị trí điểm đó.
 
 ...
 
@@ -33,17 +33,17 @@ Cách đổi cờ `occluded` / `outside` cho **một điểm** trên phiên bả
 
 | Nhóm ảnh | Số ảnh | Số skeleton đã gán | Số người dưới 60 px (không gán) | Số poster / gương / màn hình bỏ qua | Thời gian (phút) |
 |---|---:|---:|---:|---:|---:|
-| `easy` | 5 | | | | |
-| `occluded` | 3 | | | | |
-| `back` | 2 | | | | |
-| `small` | 1 | | | | |
-| `crowd` | 1 | | | | |
-| `faces` | 8 | | — | | |
+| `easy` | 5 | 5 | 0 | 0 | 40 |
+| `occluded` | 3 | 5 | 0 | 0 | 25 |
+| `back` | 2 | 4 | 0 | 0 | 20 |
+| `small` | 1 | 2 | 0 | 0 | 15 |
+| `crowd` | 1 | 3 | 0 | 0 | 20 |
+| `faces` | 8 | 8 | — | 0 | 30 |
 
-- Số ảnh người đã xong ở mốc phút 105: ___ / 10
-- Thời gian thực tế (phút): CP1 ___ · CP2 ___ · CP3 ___
+- Số ảnh người đã xong ở mốc phút 105: _10__ / 10
+- Thời gian thực tế (phút): CP1 _90__ · CP2 _30__ · CP3 _20__
 - Ảnh tốn thời gian nhất là ảnh nào, vì sao?
-
+000000012552 là ảnh đầu tiên của person vì k tìm được chỗ đổi v1 v2 v0 như nào nên tốn thời gian một xíu
 ...
 
 ## 3. Bảng ca khó (CP1, CP2)
@@ -52,7 +52,7 @@ Mỗi điểm bạn phân vân một dòng, nhất là phân vân giữa `v = 1`
 
 | Ảnh | Người / mặt | Điểm | Cờ đã chọn | Phân vân giữa | Lý do chọn |
 |---|---|---|---:|---|---|
-| | | | | | |
+|000000150192.jpg | person | left_wrist | v1 | v0 | vì nó vẫn xác định được vị trí |
 | | | | | | |
 | | | | | | |
 
