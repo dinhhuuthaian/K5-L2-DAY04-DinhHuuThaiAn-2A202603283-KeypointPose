@@ -26,3 +26,8 @@ person_keypoints_train2017.json
 # Ground truth chỉ coach giữ
 coach_gt/
 *_gt.json
+# File sinh nhãn bằng model, không nộp
+model_persons.json
+model_faces.json
+face_landmarker.task
+*.pt
